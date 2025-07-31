@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Pet {
+  id          String   @id @default(uuid())
+  name        String   @db.VarChar(100)
+  type        String   @db.VarChar(50)
+  breed       String?  @db.VarChar(100)
+  age         Int
+  description String?  @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  images Image[]
+
+  @@index([type])
+  @@index([age])
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  url       String   @db.VarChar(255)
+  petId     String
+  pet       Pet      @relation(fields: [petId], references: [id])
+  createdAt DateTime @default(now())
+}
