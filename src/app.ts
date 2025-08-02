@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { errorHandler } from './utils/errorHandler';
+import { UserRoutes } from './routes/UserRoutes';
+import { AuthRoutes } from './routes/AuthRoutes';
 import { PetRoutes } from './routes/PetRoutes';
 import 'reflect-metadata';
 
@@ -15,7 +17,9 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Mount routes
+new UserRoutes(app);
 new PetRoutes(app);
+new AuthRoutes(app);
 
 // Health check
 app.get('/health', (_req, res) => {

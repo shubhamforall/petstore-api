@@ -6,9 +6,34 @@ import { petsDAO } from '../daos/PetsDAO';
 import { ApiError } from '../utils/ApiError';
 
 export class PetModel {
-    async listPets(page: number, pageSize: number) {
-        return await petsDAO.findAll(page, pageSize);
+    async listPetsWithFilters(filters: {
+        type?: string;
+        age?: number;
+        page: number;
+        pageSize: number;
+    }) {
+        const { page, pageSize, type, age } = filters;
+
+        const where: any = {};
+        if (type) where.type = type;
+        if (typeof age === 'number') where.age = age;
+
+        const skip = (page - 1) * pageSize;
+
+        const [results, count] = await Promise.all([
+            prisma.pet.findMany({
+                where,
+                include: { images: true },
+                skip,
+                take: pageSize,
+                orderBy: { createdAt: 'desc' },
+            }),
+            prisma.pet.count({ where }),
+        ]);
+
+        return { results, count };
     }
+
 
     async getPetById(id: string) {
         const pet = await petsDAO.get(id);

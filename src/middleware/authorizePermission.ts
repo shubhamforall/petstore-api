@@ -1,0 +1,18 @@
+import { RequestHandler, Response, NextFunction } from 'express';
+import { AuthenticatedRequest } from './authMiddleware';
+import { ApiError } from '../utils/ApiError';
+import { permissions, PermissionKey } from '../config/permissions';
+import { Role } from '../types/roles';
+
+export function authorizePermission(permission: PermissionKey): RequestHandler {
+    return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        const userRole = req.user?.role as Role;
+        const allowedRoles = permissions[permission] as Role[];
+
+        if (!userRole || !allowedRoles.includes(userRole)) {
+            throw new ApiError('Access denied: insufficient permissions', 403);
+        }
+
+        next();
+    };
+}

@@ -1,6 +1,8 @@
 import { type Express, Router } from 'express';
 import { PetController } from '../controllers/PetController';
 import { upload } from '../utils/upload';
+import { authenticateToken } from '../middleware/authMiddleware';
+import { authorizePermission } from '../middleware/authorizePermission';
 
 export class PetRoutes {
     constructor(app: Express) {
@@ -13,14 +15,35 @@ export class PetRoutes {
 
         router
             .route('/')
-            .get(petController.listPets)
-            .post(upload.array('images'), petController.addPetWithImages);
+            .get(
+                authenticateToken,
+                authorizePermission('GET_PETS'),
+                petController.listPets
+            )
+            .post(
+                authenticateToken,
+                authorizePermission('CREATE_PET'),
+                upload.array('images'),
+                petController.addPetWithImages
+            );
 
         router
             .route('/:id')
-            .get(petController.getPetById)
-            .put(petController.updatePet)
-            .delete(petController.deletePet);
+            .get(
+                authenticateToken,
+                authorizePermission('GET_PETS'),
+                petController.getPetById
+            )
+            .put(
+                authenticateToken,
+                authorizePermission('UPDATE_PET'),
+                petController.updatePet
+            )
+            .delete(
+                authenticateToken,
+                authorizePermission('DELETE_PET'),
+                petController.deletePet
+            );
 
         app.use('/pets', router);
     }
