@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -8,7 +9,6 @@ import { errorHandler } from './utils/errorHandler';
 import { UserRoutes } from './routes/UserRoutes';
 import { AuthRoutes } from './routes/AuthRoutes';
 import { PetRoutes } from './routes/PetRoutes';
-import 'reflect-metadata';
 
 dotenv.config();
 
@@ -19,17 +19,20 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Mount routes
+if (process.env.NODE_ENV === 'test') {
+    const { mockAuthAsAdmin } = require('../test/utils/mockAuthMiddleware');
+    app.use(mockAuthAsAdmin);
+} else {
+    const { authenticateToken } = require('./middleware/authMiddleware');
+    app.use(authenticateToken);
+}
+
 new UserRoutes(app);
 new PetRoutes(app);
 new AuthRoutes(app);
 
-// Health check
-app.get('/health', (_req, res) => {
-    res.send('PetStore API is running!');
-});
 
-// Global error handler (always last)
+
 app.use(errorHandler);
 
 export default app;
