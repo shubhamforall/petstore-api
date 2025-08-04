@@ -173,7 +173,6 @@ npm run create:superadmin
 Test the API using the Postman files in the `/postman` directory:
 
 - `Petstore_Collection.json`
-- `Petstore_Environment.json`
 
 ---
 
