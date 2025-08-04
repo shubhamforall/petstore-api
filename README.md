@@ -119,11 +119,11 @@ src/
 ├── middleware/
 ├── models/
 ├── routes/
-├── scripts/               # CLI scripts like createSuperAdmin
+├── scripts/              
 ├── services/
 ├── utils/
 ├── config/
-├── docs/                  # Swagger schema
+├── docs/                
 ├── app.ts
 └── server.ts
 ```

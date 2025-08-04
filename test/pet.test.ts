@@ -39,6 +39,7 @@ describe('Pet API', () => {
 
     it('should return a list of pets', async () => {
         const res = await request(app).get('/pets');
+        console.log(">>>>>>>>>>>>>>>>>", res.body);
         expect(res.status).toBe(200);
         expect(res.body.data).toHaveProperty('results');
         expect(Array.isArray(res.body.data.results)).toBe(true);

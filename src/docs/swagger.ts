@@ -155,7 +155,6 @@ const swaggerOptions: swaggerJSDoc.Options = {
                     },
                 },
 
-                // Pet-related schemas
                 AddPetDTO: {
                     type: 'object',
                     required: ['name', 'type', 'age'],
@@ -175,6 +174,15 @@ const swaggerOptions: swaggerJSDoc.Options = {
                     },
                 },
                 PatchPetDTO: {
+                    type: 'object',
+                    properties: {
+                        type: { type: 'string', example: 'Cat' },
+                        breed: { type: 'string', example: 'Persian' },
+                        age: { type: 'integer', example: 2 },
+                        description: { type: 'string', example: 'Calm and cuddly' },
+                    },
+                },
+                PutPetDTO: {
                     type: 'object',
                     properties: {
                         name: { type: 'string', example: 'Rocky' },
@@ -210,7 +218,7 @@ const swaggerOptions: swaggerJSDoc.Options = {
                         },
                     },
                 },
-                PetResponse: {
+                PetAddResponse: {
                     type: 'object',
                     properties: {
                         data: { $ref: '#/components/schemas/Pet' },
@@ -258,6 +266,84 @@ const swaggerOptions: swaggerJSDoc.Options = {
                         is_success: { type: 'boolean', example: true },
                     },
                 },
+                UpdatePetResponse: {
+                    type: 'object',
+                    properties: {
+                        data: {
+                            type: 'object',
+                            properties: {
+                                id: { type: 'string', format: 'uuid', example: '1e896666-27f6-408d-af15-45a02865cdf7' },
+                                name: { type: 'string', example: 'Mimosa' },
+                                type: { type: 'string', example: 'Cat' },
+                                breed: { type: 'string', example: 'Persian Cat' },
+                                age: { type: 'integer', example: 4 },
+                                description: { type: 'string', example: 'Friendly and active\n' },
+                                createdAt: { type: 'string', format: 'date-time', example: '2025-08-04T13:03:05.787Z' },
+                                updatedAt: { type: 'string', format: 'date-time', example: '2025-08-04T13:30:25.955Z' },
+                            },
+                            required: ['id', 'name', 'type', 'breed', 'age', 'createdAt', 'updatedAt'],
+                        },
+                        errors: { type: 'null', nullable: true },
+                        messages: {
+                            type: 'object',
+                            properties: {
+                                message: { type: 'string', example: 'Pet updated successfully' },
+                            },
+                            required: ['message'],
+                        },
+                        status_code: { type: 'integer', example: 200 },
+                        is_success: { type: 'boolean', example: true },
+                    },
+                    required: ['data', 'errors', 'messages', 'status_code', 'is_success'],
+                },
+
+                BadRequestResponse: {
+                    type: 'object',
+                    properties: {
+                        data: { type: 'null' },
+                        errors: {
+                            type: 'array',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    code: { type: 'string', example: 'INVALID' },
+                                    message: { type: 'string', example: 'Invalid data.' },
+                                    field: { type: 'string', example: 'field_name' },
+                                },
+                                required: ['code', 'message', 'field'],
+                            },
+                        },
+                        status_code: { type: 'integer', example: 400 },
+                        is_success: { type: 'boolean', example: false },
+                    },
+                    required: ['data', 'errors', 'status_code', 'is_success'],
+                },
+
+                UnauthorizedResponse: {
+                    type: 'object',
+                    properties: {
+                        data: { type: 'null' },
+                        errors: {
+                            type: 'array',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    message: { type: 'string', example: 'Unauthorized' },
+                                    code: { type: 'string', example: 'UNAUTHORIZED' },
+                                },
+                            },
+                        },
+                        messages: {
+                            type: 'object',
+                            properties: {
+                                message: { type: 'string', example: 'You are not authorized to access this resource' },
+                            },
+                        },
+                        status_code: { type: 'integer', example: 401 },
+                        is_success: { type: 'boolean', example: false },
+                    },
+                }
+
             },
         },
     },

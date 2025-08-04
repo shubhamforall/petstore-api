@@ -3,11 +3,15 @@ import {
     IsOptional,
     IsString,
     Min,
-    MaxLength,
+    IsUUID,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UrlDataDTO {
+    @IsOptional()
+    @IsUUID()
+    id?: string;
+
     @IsOptional()
     @IsString()
     type?: string;

@@ -7,6 +7,7 @@ import { sendSuccess } from '../utils/responseHandler';
 import { UrlDataDTO } from '../dtos/UrlDataDTO';
 import { validateSync } from 'class-validator';
 import { ApiError } from '../utils/ApiError';
+import { PutPetDTO } from '../dtos/PutPetDTO';
 
 export class PetController {
     private petModel = new PetModel();
@@ -46,8 +47,14 @@ export class PetController {
         return sendSuccess(res, result, 'Pet added successfully', 201);
     };
 
-    updatePet = async (req: Request, res: Response) => {
+    updatePetPartial = async (req: Request, res: Response) => {
         const dto = plainToInstance(PatchPetDTO, req.body);
+        const updatedPet = await this.petModel.updatePetPartial(req.params.id, dto);
+        return sendSuccess(res, updatedPet, 'Pet updated successfully');
+    };
+
+    updatePet = async (req: Request, res: Response) => {
+        const dto = plainToInstance(PutPetDTO, req.body);
         const result = await this.petModel.updatePet(req.params.id, dto);
         return sendSuccess(res, result, 'Pet updated successfully');
     };

@@ -1,7 +1,8 @@
-import { Prisma } from '@prisma/client'; // at top if missing
+import { Prisma, Pet } from '@prisma/client';
 import { prisma } from '../daos/PrismaClientInstance';
 import { AddPetDTO } from '../dtos/AddPetDTO';
 import { PatchPetDTO } from '../dtos/PatchPetDTO';
+import { PutPetDTO } from '../dtos/PutPetDTO';
 import { petsDAO } from '../daos/PetsDAO';
 import { ApiError } from '../utils/ApiError';
 
@@ -75,7 +76,22 @@ export class PetModel {
         return petsDAO.get(pet.id);
     }
 
-    async updatePet(id: string, data: PatchPetDTO) {
+    async updatePetPartial(id: string, data: Partial<Pet>): Promise<Pet> {
+        const existing = await petsDAO.get(id);
+        if (!existing) {
+            throw new ApiError('Pet not found', 404);
+        }
+        return await prisma.pet.update({
+            where: { id },
+            data: {
+                ...data,
+                updatedAt: new Date(),
+            },
+        });
+    }
+
+
+    async updatePet(id: string, data: PutPetDTO) {
         const existing = await petsDAO.get(id);
         if (!existing) {
             throw new ApiError('Pet not found', 404);

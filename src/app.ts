@@ -9,6 +9,7 @@ import { errorHandler } from './utils/errorHandler';
 import { UserRoutes } from './routes/UserRoutes';
 import { AuthRoutes } from './routes/AuthRoutes';
 import { PetRoutes } from './routes/PetRoutes';
+import { authenticateToken } from './middleware/authMiddleware';
 
 dotenv.config();
 
@@ -19,13 +20,8 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-if (process.env.NODE_ENV === 'test') {
-    const { mockAuthAsAdmin } = require('../test/utils/mockAuthMiddleware');
-    app.use(mockAuthAsAdmin);
-} else {
-    const { authenticateToken } = require('./middleware/authMiddleware');
-    app.use(authenticateToken);
-}
+app.use(authenticateToken);
+
 
 new UserRoutes(app);
 new PetRoutes(app);

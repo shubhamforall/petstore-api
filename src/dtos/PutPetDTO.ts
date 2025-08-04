@@ -7,7 +7,11 @@ import {
     Min,
 } from 'class-validator';
 
-export class PatchPetDTO {
+export class PutPetDTO {
+    @IsOptional()
+    @IsString()
+    @MaxLength(100)
+    name?: string;
 
     @IsOptional()
     @IsString()

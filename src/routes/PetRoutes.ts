@@ -4,7 +4,13 @@ import { upload } from '../utils/upload';
 import { authenticateToken } from '../middleware/authMiddleware';
 import { authorizePermission } from '../middleware/authorizePermission';
 import { cacheResponse } from '../middleware/cacheMiddleware';
-
+import { validate } from 'class-validator';
+import { AddPetDTO } from '../dtos/AddPetDTO';
+import { validateRequest } from '../middleware/validateRequest';
+import { UrlDataDTO } from '../dtos/UrlDataDTO';
+import { PatchPetDTO } from '../dtos/PatchPetDTO';
+import { PutPetDTO } from '../dtos/PutPetDTO';
+import { IdParamDTO } from '../dtos/IdParamDTO';
 /**
  * @swagger
  * tags:
@@ -60,7 +66,8 @@ export class PetRoutes {
             .get(
                 authenticateToken,
                 authorizePermission('GET_PETS'),
-                // cacheResponse(60),
+                validateRequest(UrlDataDTO, 'query'),
+                cacheResponse(60),
                 petController.listPets
             )
 
@@ -84,12 +91,26 @@ export class PetRoutes {
              *         content:
              *           application/json:
              *             schema:
-             *               $ref: '#/components/schemas/PetResponse'
+             *               $ref: '#/components/schemas/PetAddResponse'
+             *       400:
+             *         description: Bad Request - Validation failed
+             *         content:
+             *           application/json:
+             *             schema:
+             *               $ref: '#/components/schemas/BadRequestResponse'
+             *       401:
+             *         description: Unauthorized - Token missing or invalid
+             *         content:
+             *           application/json:
+             *             schema:
+             *               $ref: '#/components/schemas/UnauthorizedResponse'
              */
+
             .post(
                 authenticateToken,
                 authorizePermission('CREATE_PET'),
                 upload.array('images'),
+                validateRequest(AddPetDTO),
                 petController.addPetWithImages
             );
 
@@ -114,12 +135,25 @@ export class PetRoutes {
          *           application/json:
          *             schema:
          *               $ref: '#/components/schemas/PetResponse'
+         *       400:
+         *         description: Bad Request - Validation failed
+         *         content:
+         *           application/json:
+         *             schema:
+         *               $ref: '#/components/schemas/BadRequestResponse'
+         *       401:
+         *         description: Unauthorized - Token missing or invalid
+         *         content:
+         *           application/json:
+        *             schema:
+         *               $ref: '#/components/schemas/UnauthorizedResponse'
          */
         router
             .route('/:id')
             .get(
                 authenticateToken,
                 authorizePermission('GET_PETS'),
+                validateRequest(UrlDataDTO, 'params'),
                 petController.getPetById
             )
 
@@ -137,6 +171,56 @@ export class PetRoutes {
              *         required: true
              *         schema:
              *           type: string
+             *           format: uuid
+             *     requestBody:
+             *       required: true
+             *       content:
+             *         application/json:
+             *           schema:
+             *             $ref: '#/components/schemas/PutPetDTO'
+             *     responses:
+             *       200:
+             *         description: Pet updated successfully
+             *         content:
+             *           application/json:
+             *             schema:
+             *               $ref: '#/components/schemas/UpdatePetResponse'
+             *       400:
+             *         description: Bad Request - Validation failed
+             *         content:
+             *           application/json:
+             *             schema:
+             *               $ref: '#/components/schemas/BadRequestResponse'
+             *       401:
+             *         description: Unauthorized - Token missing or invalid
+             *         content:
+             *           application/json:
+             *             schema:
+             *               $ref: '#/components/schemas/UnauthorizedResponse'
+             */
+            .put(
+                authenticateToken,
+                authorizePermission('UPDATE_PET'),
+                validateRequest(IdParamDTO, 'params'),
+                validateRequest(PutPetDTO),
+                petController.updatePet
+            )
+
+            /**
+             * @swagger
+             * /pets/{id}:
+             *   patch:
+             *     summary: Partially update a pet
+             *     tags: [Pets]
+             *     security:
+             *       - BearerAuth: []
+             *     parameters:
+             *       - in: path
+             *         name: id
+             *         required: true
+             *         schema:
+             *           type: string
+             *           format: uuid
              *     requestBody:
              *       required: true
              *       content:
@@ -145,17 +229,32 @@ export class PetRoutes {
              *             $ref: '#/components/schemas/PatchPetDTO'
              *     responses:
              *       200:
-             *         description: Pet updated
+             *         description: Pet updated successfully
              *         content:
              *           application/json:
              *             schema:
-             *               $ref: '#/components/schemas/PetResponse'
+             *               $ref: '#/components/schemas/UpdatePetResponse'
+             *       400:
+             *         description: Bad Request - Validation failed
+             *         content:
+             *           application/json:
+             *             schema:
+             *               $ref: '#/components/schemas/BadRequestResponse'
+             *       401:
+             *         description: Unauthorized - Token missing or invalid
+             *         content:
+             *           application/json:
+             *             schema:
+             *               $ref: '#/components/schemas/UnauthorizedResponse'
              */
-            .put(
+            .patch(
                 authenticateToken,
                 authorizePermission('UPDATE_PET'),
-                petController.updatePet
+                validateRequest(IdParamDTO, 'params'),
+                validateRequest(PatchPetDTO),
+                petController.updatePetPartial
             )
+
 
             /**
              * @swagger
@@ -174,13 +273,26 @@ export class PetRoutes {
              *     responses:
              *       204:
              *         description: Pet deleted successfully
+             *       400:
+             *         description: Bad Request - Validation failed
+             *         content:
+             *           application/json:
+             *             schema:
+             *               $ref: '#/components/schemas/BadRequestResponse'
+             *       401:
+             *         description: Unauthorized - Token missing or invalid
+             *         content:
+             *           application/json:
+             *             schema:
+             *               $ref: '#/components/schemas/UnauthorizedResponse'
              */
             .delete(
                 authenticateToken,
                 authorizePermission('DELETE_PET'),
+                validateRequest(IdParamDTO, 'params'),
                 petController.deletePet
             );
 
-        app.use('/pets', router);
+        app.use('/pet', router);
     }
 }

@@ -15,8 +15,8 @@ export function authenticateToken(req: AuthenticatedRequest, res: Response, next
     if (process.env.NODE_ENV === 'test') {
         req.user = {
             userId: 'test-user-id',
-            email: 'test@admin.com',
-            role: 'Admin',
+            email: 'test@SuperAdmin.com',
+            role: 'SuperAdmin',
         };
         return next();
     }

@@ -52,24 +52,19 @@ export class UserRoutes {
          *               status_code: 201
          *               is_success: true
          *       400:
-         *         description: Invalid input or user already exists
+         *         description: Bad Request - Validation failed
          *         content:
          *           application/json:
          *             schema:
-         *               $ref: '#/components/schemas/UserResponse'
+         *               $ref: '#/components/schemas/BadRequestResponse'
          *       401:
-         *         description: Unauthorized
+         *         description: Unauthorized - Token missing or invalid
          *         content:
          *           application/json:
          *             schema:
-         *               $ref: '#/components/schemas/UserResponse'
-         *       403:
-         *         description: Forbidden – only SuperAdmin can create users
-         *         content:
-         *           application/json:
-         *             schema:
-         *               $ref: '#/components/schemas/UserResponse'
+         *               $ref: '#/components/schemas/UnauthorizedResponse'
          */
+
         router.post(
             '/',
             authenticateToken,
@@ -92,18 +87,18 @@ export class UserRoutes {
          *           application/json:
          *             schema:
          *               $ref: '#/components/schemas/UserListResponse'
+         *       400:
+         *         description: Bad Request - Validation failed
+         *         content:
+         *           application/json:
+         *             schema:
+         *               $ref: '#/components/schemas/BadRequestResponse'
          *       401:
-         *         description: Unauthorized
+         *         description: Unauthorized - Token missing or invalid
          *         content:
          *           application/json:
          *             schema:
-         *               $ref: '#/components/schemas/UserResponse'
-         *       403:
-         *         description: Forbidden – only SuperAdmin can view users
-         *         content:
-         *           application/json:
-         *             schema:
-         *               $ref: '#/components/schemas/UserResponse'
+         *               $ref: '#/components/schemas/UnauthorizedResponse'
          */
         router.get(
             '/',
@@ -112,6 +107,6 @@ export class UserRoutes {
             controller.listUsers
         );
 
-        app.use('/users', router);
+        app.use('/user', router);
     }
 }
