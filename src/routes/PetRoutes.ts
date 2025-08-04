@@ -4,13 +4,13 @@ import { upload } from '../utils/upload';
 import { authenticateToken } from '../middleware/authMiddleware';
 import { authorizePermission } from '../middleware/authorizePermission';
 import { cacheResponse } from '../middleware/cacheMiddleware';
-import { validate } from 'class-validator';
 import { AddPetDTO } from '../dtos/AddPetDTO';
 import { validateRequest } from '../middleware/validateRequest';
 import { UrlDataDTO } from '../dtos/UrlDataDTO';
 import { PatchPetDTO } from '../dtos/PatchPetDTO';
 import { PutPetDTO } from '../dtos/PutPetDTO';
 import { IdParamDTO } from '../dtos/IdParamDTO';
+
 /**
  * @swagger
  * tags:
@@ -31,7 +31,8 @@ export class PetRoutes {
          * /pet:
          *   get:
          *     summary: Get a list of pets
-         *     tags: [Pets]
+         *     tags:
+         *       - Pets
          *     security:
          *       - BearerAuth: []
          *     parameters:
@@ -66,12 +67,12 @@ export class PetRoutes {
          *           application/json:
          *             schema:
          *               $ref: '#/components/schemas/UnauthorizedResponse'
-         *      404:
+         *       404:
          *         description: Not Found - No pets found
          *         content:
-         *          application/json:
+         *           application/json:
          *             schema:
-         *              $ref: '#/components/schemas/NotFoundResponse'
+         *               $ref: '#/components/schemas/NotFoundResponse'
          */
         router
             .route('/')
@@ -82,13 +83,13 @@ export class PetRoutes {
                 cacheResponse(60),
                 petController.listPets
             )
-
             /**
              * @swagger
              * /pet:
              *   post:
              *     summary: Add a new pet with images
-             *     tags: [Pets]
+             *     tags:
+             *       - Pets
              *     security:
              *       - BearerAuth: []
              *     requestBody:
@@ -117,7 +118,6 @@ export class PetRoutes {
              *             schema:
              *               $ref: '#/components/schemas/UnauthorizedResponse'
              */
-
             .post(
                 authenticateToken,
                 authorizePermission('CREATE_PET'),
@@ -131,7 +131,8 @@ export class PetRoutes {
          * /pet/{id}:
          *   get:
          *     summary: Get pet by ID
-         *     tags: [Pets]
+         *     tags:
+         *       - Pets
          *     security:
          *       - BearerAuth: []
          *     parameters:
@@ -159,12 +160,12 @@ export class PetRoutes {
          *           application/json:
          *             schema:
          *               $ref: '#/components/schemas/UnauthorizedResponse'
-         *        404:
+         *       404:
          *         description: Not Found - Pet not found
          *         content:
-         *          application/json:
-         *            schema:
-         *             $ref: '#/components/schemas/NotFoundResponse'
+         *           application/json:
+         *             schema:
+         *               $ref: '#/components/schemas/NotFoundResponse'
          */
         router
             .route('/:id')
@@ -174,13 +175,13 @@ export class PetRoutes {
                 validateRequest(UrlDataDTO, 'params'),
                 petController.getPetById
             )
-
             /**
              * @swagger
              * /pet/{id}:
              *   put:
              *     summary: Update a pet
-             *     tags: [Pets]
+             *     tags:
+             *       - Pets
              *     security:
              *       - BearerAuth: []
              *     parameters:
@@ -218,9 +219,9 @@ export class PetRoutes {
              *       404:
              *         description: Not Found - Pet not found
              *         content:
-             *          application/json:
-             *            schema:
-             *             $ref: '#/components/schemas/NotFoundResponse'
+             *           application/json:
+             *             schema:
+             *               $ref: '#/components/schemas/NotFoundResponse'
              */
             .put(
                 authenticateToken,
@@ -229,13 +230,13 @@ export class PetRoutes {
                 validateRequest(PutPetDTO),
                 petController.updatePet
             )
-
             /**
              * @swagger
              * /pet/{id}:
              *   patch:
              *     summary: Partially update a pet
-             *     tags: [Pets]
+             *     tags:
+             *       - Pets
              *     security:
              *       - BearerAuth: []
              *     parameters:
@@ -270,12 +271,12 @@ export class PetRoutes {
              *           application/json:
              *             schema:
              *               $ref: '#/components/schemas/UnauthorizedResponse'
-             *        404:
+             *       404:
              *         description: Not Found - Pet not found
              *         content:
-             *          application/json:
-             *            schema:
-             *            $ref: '#/components/schemas/NotFoundResponse'
+             *           application/json:
+             *             schema:
+             *               $ref: '#/components/schemas/NotFoundResponse'
              */
             .patch(
                 authenticateToken,
@@ -284,14 +285,13 @@ export class PetRoutes {
                 validateRequest(PatchPetDTO),
                 petController.updatePetPartial
             )
-
-
             /**
              * @swagger
              * /pet/{id}:
              *   delete:
              *     summary: Delete a pet
-             *     tags: [Pets]
+             *     tags:
+             *       - Pets
              *     security:
              *       - BearerAuth: []
              *     parameters:
@@ -318,9 +318,9 @@ export class PetRoutes {
              *       404:
              *         description: Not Found - Pet not found
              *         content:
-             *          application/json:
-             *            schema:
-             *            $ref: '#/components/schemas/NotFoundResponse'
+             *           application/json:
+             *             schema:
+             *               $ref: '#/components/schemas/NotFoundResponse'
              */
             .delete(
                 authenticateToken,
