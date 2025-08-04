@@ -13,6 +13,7 @@ The **Petstore API** is a robust backend system built with **Node.js**, **TypeSc
 - 🧠 **Request Validation** using `class-validator` and DTO patterns
 - 🧾 **Centralized Permission Check** based on permissions per feature
 - ⚡ **Redis Caching** for GET endpoints (via `ioredis`)
+- 📈 Rate Limiting using express-rate-limit to protect against abuse
 - 📄 **Swagger UI** for interactive API documentation
 - 🧪 **Jest + Supertest** for endpoint testing
 - 🗂️ **Prisma ORM** for PostgreSQL database access
