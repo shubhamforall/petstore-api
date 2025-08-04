@@ -12,7 +12,6 @@ export function cacheResponse(ttlSeconds: number) {
             return sendSuccess(res, parsed, 'Fetched from cache');
         }
 
-        // Hook into response to cache after it runs
         const originalJson = res.json.bind(res);
         res.json = (body: any) => {
             redisClient.setEx(cacheKey, ttlSeconds, JSON.stringify(body.data || body));

@@ -31,8 +31,18 @@ export class AuthRoutes {
          *           application/json:
          *             schema:
          *               $ref: '#/components/schemas/LoginResponse'
+         *       400:
+         *         description: Bad Request - Validation failed
+         *         content:
+         *           application/json:
+         *             schema:
+         *               $ref: '#/components/schemas/BadRequestResponse'
          *       401:
-         *         description: Invalid credentials
+         *         description: Unauthorized - Token missing or invalid
+         *         content:
+         *           application/json:
+         *             schema:
+         *               $ref: '#/components/schemas/UnauthorizedResponse'
          */
         router.post('/login', controller.login);
 

@@ -1,4 +1,3 @@
-// test/pet.test.ts
 import request from 'supertest';
 import app from '../src/app';
 import path from 'path';

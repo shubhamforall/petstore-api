@@ -32,7 +32,7 @@ const swaggerOptions: swaggerJSDoc.Options = {
                         },
                         password: {
                             type: 'string',
-                            example: 'Shubham@123',
+                            example: 'User@123',
                         },
                     },
                 },
@@ -51,7 +51,7 @@ const swaggerOptions: swaggerJSDoc.Options = {
                                     properties: {
                                         id: {
                                             type: 'string',
-                                            example: 'abc123-user-id',
+                                            example: '2e896666-27f6-408d-af15-45a02865cdf7',
                                         },
                                         email: {
                                             type: 'string',
@@ -63,11 +63,11 @@ const swaggerOptions: swaggerJSDoc.Options = {
                                         },
                                         firstName: {
                                             type: 'string',
-                                            example: 'Shubham',
+                                            example: 'FirstName',
                                         },
                                         lastName: {
                                             type: 'string',
-                                            example: 'Patil',
+                                            example: 'LastName',
                                         },
                                     },
                                 },
@@ -343,11 +343,36 @@ const swaggerOptions: swaggerJSDoc.Options = {
                         is_success: { type: 'boolean', example: false },
                     },
                 }
+                ,
+                NotFoundResponse: {
+                    type: 'object',
+                    properties: {
+                        data: { type: 'null' },
+                        errors: {
+                            type: 'array',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    message: { type: 'string', example: 'Resource not found' },
+                                    code: { type: 'string', example: 'NOT_FOUND' },
+                                },
+                            },
+                        },
+                        messages: {
+                            type: 'object',
+                            properties: {
+                                message: { type: 'string', example: 'The requested resource was not found' },
+                            },
+                        },
+                        status_code: { type: 'integer', example: 404 },
+                        is_success: { type: 'boolean', example: false },
+                    },
+                }
 
             },
         },
     },
-    apis: ['./src/routes/*.ts'], // auto-scan route files
+    apis: ['./src/routes/*.ts'],
 };
 
 export const swaggerSpec = swaggerJSDoc(swaggerOptions);
